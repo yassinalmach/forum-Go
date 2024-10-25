@@ -1,14 +1,15 @@
 -- Users table - stores user information
-CREATE TABLE IF NOT EXISTS users {
+CREATE TABLE IF NOT EXISTS users (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     username TEXT UNIQUE NOT NULL,
     email TEXT UNIQUE NOT NULL,
-    password TEXT NOT NULL,
-};
+    password TEXT NOT NULL
+);
 
 -- Sessions table - manage user authentication
-CREATE TABLE sessions (
-    id TEXT PRIMARY KEY,  -- UUID
+CREATE TABLE IF NOT EXISTS sessions (
+    id TEXT PRIMARY KEY,
+    -- UUID
     user_id INTEGER NOT NULL,
     created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
     expires_at DATETIME NOT NULL,
@@ -16,21 +17,21 @@ CREATE TABLE sessions (
 );
 
 -- Posts table - stores all forum posts
-CREATE TABLE IF NOT EXISTS posts {
+CREATE TABLE IF NOT EXISTS posts (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     user_id INTEGER,
     title TEXT NOT NULL,
     content TEXT NOT NULL,
     image_url TEXT,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    FOREIGN KEY (user_id) REFERENCES users(id),
-}
+    FOREIGN KEY (user_id) REFERENCES users(id)
+);
 
 -- Categories table - store categories
-CREATE TABLE IF NOT EXISTS categories {
+CREATE TABLE IF NOT EXISTS categories (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     name TEXT NOT NULL UNIQUE
-};
+);
 
 -- Post_Categories table - for relationship between posts and categories
 CREATE TABLE IF NOT EXISTS post_categories (
@@ -63,14 +64,15 @@ CREATE TABLE IF NOT EXISTS reactions (
     FOREIGN KEY (user_id) REFERENCES users(id),
     FOREIGN KEY (post_id) REFERENCES posts(id),
     FOREIGN KEY (comment_id) REFERENCES comments(id),
-    CHECK ((post_id IS NOT NULL AND comment_id IS NULL) OR (post_id IS NULL AND comment_id IS NOT NULL)),
+    CHECK (
+        (
+            post_id IS NOT NULL
+            AND comment_id IS NULL
+        )
+        OR (
+            post_id IS NULL
+            AND comment_id IS NOT NULL
+        )
+    ),
     UNIQUE(user_id, post_id, comment_id)
 );
-
--- Indexes for better query performance
-CREATE INDEX idx_sessions_user_id ON sessions(user_id);
-CREATE INDEX idx_posts_user_id ON posts(user_id);
-CREATE INDEX idx_comments_post_id ON comments(post_id);
-CREATE INDEX idx_comments_user_id ON comments(user_id);
-CREATE INDEX idx_reactions_target ON reactions(target_type, target_id);
-CREATE INDEX idx_post_categories_category_id ON post_categories(category_id);

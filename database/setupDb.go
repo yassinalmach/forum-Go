@@ -22,7 +22,7 @@ func SetupDb() (*sql.DB, error) {
 	}
 
 	// read schema design database from .sql file
-	schema, err := os.ReadFile("schema.sql")
+	schema, err := os.ReadFile("./database/schema.sql")
 	if err != nil {
 		return nil, fmt.Errorf("error reading schema.sgl: %v", err)
 	}
