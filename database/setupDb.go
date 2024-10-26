@@ -24,12 +24,12 @@ func SetupDb() (*sql.DB, error) {
 	// read schema design database from .sql file
 	schema, err := os.ReadFile("./database/schema.sql")
 	if err != nil {
-		return nil, fmt.Errorf("error reading schema.sgl: %v", err)
+		return nil, fmt.Errorf("error reading schema.sql: %v", err)
 	}
 
 	// creating tables
 	if _, err := db.Exec(string(schema)); err != nil {
-		return nil, fmt.Errorf("error executing schema.sgl: %v", err)
+		return nil, fmt.Errorf("error executing schema.sql: %v", err)
 	}
 
 	return db, nil

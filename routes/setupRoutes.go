@@ -5,19 +5,20 @@ import (
 	"net/http"
 )
 
-func SetupRoutes() *http.ServeMux {
-	mux := http.NewServeMux()
-	
-	// page handlers
+func SetupRoutes(mux *http.ServeMux) {
+	// asset handler
 	mux.HandleFunc("/assets/", handlers.AssetsHandler)
-	mux.HandleFunc("/", handlers.HomeHandler)
-	mux.HandleFunc("/register", handlers.RegisterHandler)
-	mux.HandleFunc("/login", handlers.LoginHandler)
+
+	// page handlers
+	mux.HandleFunc("GET /", handlers.HomeHandler)
+	mux.HandleFunc("GET /register", handlers.RegisterHandler)
+	mux.HandleFunc("GET /login", handlers.LoginHandler)
 
 	// api handlers
-	mux.HandleFunc("/users", handlers.PostUser)
-	mux.HandleFunc("/login", handlers.LoginUser)
-	mux.HandleFunc("/check_session", handlers.SessionHandler)
-
-	return mux
+	mux.HandleFunc("POST /api/register", handlers.LoginUser)
+	mux.HandleFunc("POST /api/login", handlers.LoginUser)
+	mux.HandleFunc("POST /api/post", handlers.PostUser)
+	mux.HandleFunc("POST /api/comment", handlers.LoginUser)
+	mux.HandleFunc("api//check_session", handlers.SessionHandler)
 }
+

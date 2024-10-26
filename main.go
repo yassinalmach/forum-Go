@@ -9,17 +9,20 @@ import (
 )
 
 func main() {
+	// Initialize database
 	db, err := database.SetupDb()
 	if err != nil {
 		log.Fatalln(err)
 	}
 	defer db.Close()
 
-	mux := routes.SetupRoutes()
-	
+	// Initialize router
+	mux := http.NewServeMux()
+	routes.SetupRoutes(mux)
+
+	// Start server
 	fmt.Println("Server running on: http://localhost:8080")
 	if err := http.ListenAndServe(":8080", mux); err != nil {
 		log.Fatal(err)
 	}
-	
 }
